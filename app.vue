@@ -2,12 +2,9 @@
 </script>
 
 <template>
-  <div class="hello">
-    <NuxtLink to = "/">Home</NuxtLink>
-    <NuxtLink :to ="{name: 'about'}">about</NuxtLink>
-
-    <NuxtPage />
-  </div>
+  <NuxtLayout>
+    <NuxtPage/>
+  </NuxtLayout>
 </template>
 
 <style scoped>
