@@ -1,46 +1,54 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useFetch } from '#app'
+import { ref } from 'vue';
+import { useNuxtApp } from '#app';
+
 definePageMeta({
     layout: "another"
 })
 
-interface SearchResultItem {
-    cacheId: string
-    link: string
-    title: string
-    snippet: string
+export interface SearchResultItem {
+  cacheId: string;
+  link: string;
+  title: string;
+  snippet: string;
 }
 
-const lists = ['大谷翔平','ROCK IN JAPAN FESTIVAL 2024','野球速報','交流戦','松倉伊吹','加藤純一'];
+const lists = ['大谷翔平', 'ROCK IN JAPAN FESTIVAL 2024', '野球速報', '交流戦', '松倉伊吹', '加藤純一'];
+const query = ref<string>('');
+const results = ref<SearchResultItem[]>([]);
 
-const query = ref<string>('')
-const results = ref<SearchResultItem[] | null>(null)
+const { $axios } = useNuxtApp();
 
-const search = async (query: string) => {
-    const { data } = await useFetch(`/api/search?q=${query}`)
-    results.value = data.value?.items || []
-}
+const performSearch = async (searchQuery?: string) => {
+  try {
+    const q = searchQuery || query.value;
+    const { data } = await $axios.get(`/api/search?q=${encodeURIComponent(q)}`);
+    results.value = data?.items || [];
+  } catch (error) {
+    console.error('Error fetching search results:', error);
+    results.value = [];
+  }
+};
 </script>
 
 <template>
     <div class="search-container">
         <h1>Google Search</h1>
-        <form @submit.prevent="search(query)" class="search-form">
+        <form @submit.prevent="performSearch(query)" class="search-form">
             <input v-model="query" type="text" placeholder="検索ワードを入力" class="search-input" />
             <button type="submit" class="search-button">検索</button>
         </form>
         <div class="template-buttons">
             <p>テンプレート</p>
             <ul class="template-lists">
-                <li v-for="item in lists">
-                    <button @click="search(item)">{{ item }}</button>
+                <li v-for="item in lists" :key="item">
+                <button @click="performSearch(item)">{{ item }}</button>
                 </li>
             </ul>
         </div>
-        <div v-if="results" class="search-results">
+        <div v-if="results.length" class="search-results">
             <div v-for="item in results" :key="item.cacheId" class="result-item">
-                <h3><a :href="item.link">{{ item.title }}</a></h3>
+                <h3><a :href="item.link" target="_blank" rel="noopener noreferrer">{{ item.title }}</a></h3>
                 <p>{{ item.snippet }}</p>
             </div>
         </div>
