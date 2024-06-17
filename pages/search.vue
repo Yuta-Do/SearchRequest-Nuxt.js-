@@ -12,6 +12,8 @@ interface SearchResultItem {
     snippet: string
 }
 
+const lists = ['大谷翔平','ROCK IN JAPAN FESTIVAL 2024','野球速報','交流戦','松倉伊吹','加藤純一'];
+
 const query = ref<string>('')
 const results = ref<SearchResultItem[] | null>(null)
 
@@ -30,12 +32,11 @@ const search = async (query: string) => {
         </form>
         <div class="template-buttons">
             <p>テンプレート</p>
-            <button @click="search('大谷翔平')">大谷翔平</button>
-            <button @click="search('ROCK IN JAPAN FESTIVAL 2024')">ROCK IN JAPAN FESTIVAL 2024</button>
-            <button @click="search('浜崎順平')">浜崎順平</button>
-            <button @click="search('加藤純一')">加藤純一</button>
-            <button @click="search('馬場豊')">馬場豊</button>
-            <button @click="search('野球速報')">野球速報</button>
+            <ul class="template-lists">
+                <li v-for="item in lists">
+                    <button @click="search(item)">{{ item }}</button>
+                </li>
+            </ul>
         </div>
         <div v-if="results" class="search-results">
             <div v-for="item in results" :key="item.cacheId" class="result-item">
@@ -104,6 +105,15 @@ h1 {
 
 .template-buttons button:hover {
     background-color: #f0f0f0;
+}
+
+.template-lists{
+    display: flex;
+    list-style-type : none
+}
+
+.template-lists li{
+    text-decoration: none;
 }
 
 .search-results {
