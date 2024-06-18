@@ -13,7 +13,7 @@ export interface SearchResultItem {
   snippet: string;
 }
 
-const lists = ['大谷翔平', 'ROCK IN JAPAN FESTIVAL 2024', '野球速報', '交流戦', '松倉伊吹', '加藤純一'];
+const lists = ['大谷翔平', 'セブン 混んでる', '野球速報', '交流戦', 'グラブル オワコン','ジャグ連 コツ'];
 const query = ref<string>('');
 const results = ref<SearchResultItem[]>([]);
 
@@ -42,7 +42,7 @@ const performSearch = async (searchQuery?: string) => {
             <p>テンプレート</p>
             <ul class="template-lists">
                 <li v-for="item in lists" :key="item">
-                <button @click="performSearch(item)">{{ item }}</button>
+                    <button @click="performSearch(item)">{{ item }}</button>
                 </li>
             </ul>
         </div>
@@ -117,7 +117,8 @@ h1 {
 
 .template-lists{
     display: flex;
-    list-style-type : none
+    list-style-type : none;
+    align-items: center;
 }
 
 .template-lists li{
